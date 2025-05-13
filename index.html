@@ -14,27 +14,22 @@
             color: white;
             padding: 10px;
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Adjusted for spacing */
             font-weight: bold;
+            list-style: none;
+            display: block;
+            border-radius: 5px; /* Rounded corners for banner */
         }
-        /* Use details/summary for accordions */
-        details > summary {
-            list-style: none; /* Remove default triangle */
+        .content { 
+            display: none; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            margin-bottom: 10px; 
+            border-radius: 5px; /* Rounded corners for content */
+            margin-top: -10px; /* Visual connection with banner */
+            padding-top: 20px; /* Avoid text clash */
+            background-color: #fff; /* Ensure content background is white or default */
         }
-        details > summary::-webkit-details-marker {
-            display: none; /* Remove default triangle for Chrome/Safari */
-        }
-        details > summary::marker {
-             display: none; /* Remove default triangle for Firefox */
-        }
-         details > summary:before {
-            content: '▶ '; /* Add custom marker */
-            margin-right: 5px;
-        }
-        details[open] > summary:before {
-            content: '▼ '; /* Change marker when open */
-        }
-        .content { display: block; padding: 10px; border: 1px solid #ddd; margin-top: -10px; margin-bottom: 10px; border-top: none;} /* Ensure content is visible by default if details/summary isn't used or adjust as needed */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -45,7 +40,7 @@
             text-align: left;
             vertical-align: top;
         }
-        span[style*="color: red;"] { /* Keep red span for emphasis */
+        span[style*="color: red;"] { 
             font-weight: bold;
         }
          ul, ol {
@@ -63,16 +58,41 @@
         .kanban-doing { color: #5bc0de; } /* Blue for Doing */
         .kanban-test { color: #d9534f; } /* Red for Test */
         .kanban-done { color: #5cb85c; } /* Green for Done */
+
+        /* Making facilitator instructions clearer */
+        td em, td i { /* Style for italicized facilitator notes */
+            color: #555;
+            font-style: italic;
+            display: block; /* Put notes on new lines */
+            margin-top: 5px;
+        }
+        /* Ensure step <strong> tags render bold */
+        td strong { font-weight: bold; } /* General strong for keywords */
+        td > strong { display: block; margin-bottom: 5px; } /* For step headers */
     </style>
     <script>
-        // Basic script to toggle content if not using details/summary or for additional controls
-        // function toggleContent(id) {
-        //     const content = document.getElementById(id);
-        //     if (content) {
-        //         content.style.display = content.style.display === "none" ? "block" : "none";
-        //     }
-        // }
-        // No complex JS needed if using <details><summary>
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            if (content) {
+                if (content.style.display === "none" || content.style.display === "") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            }
+        }
+
+        window.onload = () => {
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => {
+                content.style.display = 'none';
+            });
+            // Open "Resumen de Sesión" by default
+            const resumenContent = document.getElementById('activity_0_content');
+            if (resumenContent) {
+                resumenContent.style.display = 'block';
+            }
+        };
     </script>
 </head>
 <body>
@@ -83,11 +103,11 @@
         <h2 class="time-title">Tiempo efectivo de clase: 40 minutos</h2>
 
         <!-- Resumen de Sesión -->
-        <details id="activity-0" class="activity">
-            <summary class="banner">
+        <div id="activity-0" class="activity">
+            <div class="banner" onclick="toggleContent('activity_0_content')">
                 <div class="title">📝 Resumen de Sesión</div>
-            </summary>
-            <div class="content">
+            </div>
+            <div id="activity_0_content" class="content" style="display: block;">
                 <table>
                     <tr>
                         <td style="width: 50%; padding: 10px; border-right: 1px solid #ddd;">
@@ -120,16 +140,16 @@
                     </tr>
                 </table>
             </div>
-        </details>
+        </div>
 
         <!-- Desarrollo de la Sesión -->
 
         <!-- Actividad 1: Recordando Nuestra Misión Secreta! -->
-        <details id="activity-1" class="activity">
-            <summary class="banner">
+        <div id="activity-1" class="activity">
+             <div class="banner" onclick="toggleContent('activity_1_content')">
                 <div class="title">🎯 Actividad 1: ¡Recordando Nuestra Misión Secreta! ⏰ Tiempo: 5 minutos</div>
-            </summary>
-            <div class="content">
+             </div>
+            <div id="activity_1_content" class="content">
                 <table>
                     <tr>
                         <th style="width: 50%;">Acción</th>
@@ -137,8 +157,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 1 (1 min):</strong> Iniciar la sesión con energía. Presentar el objetivo general del proyecto y el enfoque de la sesión.
-                            <br><em>(<strong>Proyectar Diapositiva 1:</strong> Título de la Sesión + Objetivo Final del Proyecto: "Prototipo Rápido: Robot Héroe - Sesión 1: ¡Plan de Ataque Robótico! Objetivo Final: Crear un Robot Héroe funcional en 4 sesiones").</em>
+                            <strong>Paso 1 (1 min):</strong>
+                            <ul>
+                                <li>Iniciar la sesión con energía.</li>
+                                <li>Presentar el objetivo general del proyecto y el enfoque de la sesión.</li>
+                                <li><strong>Proyectar Diapositiva 1</strong>.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Buenos días, equipos de Héroes Robóticos! ¡Bienvenidos a la Sesión 1 de nuestro desafío 'Prototipo Rápido: Robot Héroe'! Nuestra gran misión en las próximas 4 sesiones es construir un robot real que ayude a resolver un problema importante de nuestro planeta, usando sensores y movimiento."
@@ -148,9 +172,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 2 (3 min):</strong> Guiar una revisión rápida del trabajo de la Fase 2.
-                            <br><em>(<strong>Proyectar Diapositiva 2:</strong> Recordando la Misión - Puntos clave: WWWWhy, Problema ODS, Concepto Robot Héroe Fase 2, quizá con un dibujo/esquema del concepto).</em>
-                            <br>Pedir a los equipos que consulten brevemente sus notas/documentos de la Fase 2.
+                            <strong>Paso 2 (3 min):</strong>
+                            <ul>
+                                <li>Guiar una revisión rápida del trabajo de la Fase 2.</li>
+                                <li><strong>Proyectar Diapositiva 2</strong>.</li>
+                                <li>Pedir a los equipos que consulten brevemente sus notas/documentos de la Fase 2.</li>
+                            </ul>
                         </td>
                         <td>
                             "Antes de planificar, ¡recordemos nuestra misión secreta! En la Fase 2, cada equipo definió su 'Código de la Misión', ¿verdad? Respondieron a preguntas clave: ¿Por qué hacemos esto? (WWWWhy), ¿Qué problema ODS estamos abordando? y ¿Cómo será nuestro Robot Héroe?"
@@ -163,7 +190,10 @@
                     </tr>
                      <tr>
                         <td>
-                            <strong>Paso 3 (1 min):</strong> Enfatizar la conexión entre el concepto y la planificación técnica.
+                            <strong>Paso 3 (1 min):</strong>
+                            <ul>
+                                <li>Enfatizar la conexión entre el concepto y la planificación técnica.</li>
+                            </ul>
                         </td>
                         <td>
                             "Esa idea genial de su Robot Héroe es nuestro punto de partida. Hoy, la traduciremos a un plan técnico. Necesitamos saber qué piezas construir primero, qué programar, y quién hará qué. ¡Es hora de organizar nuestro ataque robótico!"
@@ -171,14 +201,14 @@
                     </tr>
                 </table>
             </div>
-        </details>
+        </div>
 
         <!-- Actividad 2: ¡Kanban y Roles al Rescate! -->
-        <details id="activity-2" class="activity">
-            <summary class="banner">
+        <div id="activity-2" class="activity">
+            <div class="banner" onclick="toggleContent('activity_2_content')">
                 <div class="title">🛠️ Actividad 2: ¡Kanban y Roles al Rescate! ⏰ Tiempo: 5 minutos</div>
-            </summary>
-            <div class="content">
+            </div>
+            <div id="activity_2_content" class="content">
                 <table>
                     <tr>
                         <th style="width: 50%;">Acción</th>
@@ -186,9 +216,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 1 (2 min):</strong> Introducir la herramienta Kanban.
-                            <br><em>(<strong>Proyectar Diapositiva 3:</strong> Introducción a Kanban - Mostrar las 4 columnas con títulos e iconos: Por Hacer 💡, Haciendo ⚙️, Listo para Probar 🔬, ¡Listo! ✅. Explicar brevemente el flujo).</em>
-                            <br>Preparar los tableros Kanban (físicos o digitales) para cada equipo.
+                            <strong>Paso 1 (2 min):</strong>
+                            <ul>
+                                <li>Introducir la herramienta Kanban.</li>
+                                <li><strong>Proyectar Diapositiva 3</strong>.</li>
+                                <li>Preparar los tableros Kanban (físicos o digitales) para cada equipo.</li>
+                            </ul>
                         </td>
                         <td>
                             "Para organizar nuestro plan, usaremos una herramienta súper poderosa llamada ¡Kanban! Es como un mapa de nuestro trabajo. Imaginen un tablero dividido en columnas:"
@@ -206,8 +239,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 2 (3 min):</strong> Introducir los roles técnicos.
-                            <br><em>(<strong>Proyectar Diapositiva 4:</strong> Roles Técnicos - Mostrar los 3 roles con un icono simple para cada uno: Arquitecto/a T. 📐, Ingeniero/a 💻, Tester 🧪. Incluir una frase clave para cada rol).</em>
+                            <strong>Paso 2 (3 min):</strong>
+                            <ul>
+                                <li>Introducir los roles técnicos.</li>
+                                <li><strong>Proyectar Diapositiva 4</strong>.</li>
+                            </ul>
                         </td>
                         <td>
                             "Y para que el trabajo fluya genial, ¡tendremos roles técnicos en el equipo! Son como los especialistas de nuestra misión:"
@@ -223,14 +259,14 @@
                     </tr>
                 </table>
             </div>
-        </details>
+        </div>
 
         <!-- Actividad 3: ¡Descifrando el Prototipo! -->
-        <details id="activity-3" class="activity">
-            <summary class="banner">
+        <div id="activity-3" class="activity">
+            <div class="banner" onclick="toggleContent('activity_3_content')">
                 <div class="title">🤖 Actividad 3: ¡Descifrando el Prototipo! ⏰ Tiempo: 15 minutos</div>
-            </summary>
-            <div class="content">
+            </div>
+            <div id="activity_3_content" class="content">
                 <table>
                     <tr>
                         <th style="width: 50%;">Acción</th>
@@ -238,9 +274,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 1 (2 min):</strong> Explicar el objetivo de esta actividad: definir el alcance del prototipo rápido.
-                            <br><em>(<strong>Proyectar Diapositiva 5:</strong> Descifrando el Prototipo - Preguntas guía: ¿Qué es lo MÁS importante para que el robot empiece a funcionar? ¿Qué UNA función principal debe tener? ¿Qué sensor CLAVE usaremos primero?).</em>
-                            <br>Indicar que el Arquitecto/a T. liderará la discusión en cada equipo (aunque todos participan).
+                            <strong>Paso 1 (2 min):</strong>
+                            <ul>
+                                <li>Explicar el objetivo de esta actividad: definir el alcance del prototipo rápido.</li>
+                                <li><strong>Proyectar Diapositiva 5</strong>.</li>
+                                <li>Indicar que el Arquitecto/a T. liderará la discusión en cada equipo.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Muy bien, equipos! Ahora, vamos a 'Descifrar el Prototipo'. Tenemos 4 sesiones para crear un robot funcional. No podemos hacerlo TODO de golpe, ¿verdad? Necesitamos decidir: ¿Qué es lo MÁS importante que debe hacer nuestro Robot Héroe para empezar?"
@@ -254,10 +293,13 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 2 (10 min):</strong> Facilitar la discusión en equipos.
-                            <br>Circular entre los equipos, haciendo preguntas guía y ayudando a enfocar la decisión.
-                            <br>Recordar los ejemplos: "Avanzar y detenerse ante 'residuo'" (ultrasónico) o "Seguir una 'ruta' simple" (sigue-líneas).
-                            <br>Asegurarse de que cada equipo defina UNA función principal y el sensor asociado.
+                            <strong>Paso 2 (10 min):</strong>
+                            <ul>
+                                <li>Facilitar la discusión en equipos.</li>
+                                <li>Circular entre los equipos, haciendo preguntas guía y ayudando a enfocar la decisión.</li>
+                                <li>Recordar los ejemplos.</li>
+                                <li>Asegurarse de que cada equipo defina UNA función principal y el sensor asociado.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡A discutir, equipos! Tienen 10 minutos."
@@ -275,7 +317,11 @@
                     </tr>
                      <tr>
                         <td>
-                            <strong>Paso 3 (3 min):</strong> Puesta en común rápida. Pedir a cada Arquitecto/a T. que comparta brevemente la función y sensor elegidos por su equipo.
+                            <strong>Paso 3 (3 min):</strong>
+                            <ul>
+                                <li>Puesta en común rápida.</li>
+                                <li>Pedir a cada Arquitecto/a T. que comparta brevemente la función y sensor elegidos por su equipo.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Tiempo! Vamos a escuchar rápidamente qué han decidido. Arquitectos/as T. de cada equipo, ¿cuál es la función principal inicial de su Robot Héroe y qué sensor usarán?"
@@ -286,14 +332,14 @@
                     </tr>
                 </table>
             </div>
-        </details>
+        </div>
 
         <!-- Actividad 4: ¡Creando el Backlog Técnico Inicial! -->
-        <details id="activity-4" class="activity">
-            <summary class="banner">
+        <div id="activity-4" class="activity">
+            <div class="banner" onclick="toggleContent('activity_4_content')">
                 <div class="title">📝 Actividad 4: ¡Creando el Backlog Técnico Inicial! ⏰ Tiempo: 10 minutos</div>
-            </summary>
-            <div class="content">
+            </div>
+            <div id="activity_4_content" class="content">
                 <table>
                      <tr>
                         <th style="width: 50%;">Acción</th>
@@ -301,9 +347,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 1 (2 min):</strong> Explicar qué es el Backlog Técnico y cómo crearlo.
-                            <br>Indicar que el Ingeniero/a liderará esta actividad.
-                            <br><em>(<strong>Proyectar Diapositiva 6:</strong> Backlog Técnico Inicial - Mostrar ejemplo visual de post-its o tarjetas con tareas simples en la columna "Por Hacer" 💡 del Kanban. Ej: "Programar avance recto", "Leer valor sensor ultrasónico", "Conectar motor izquierdo").</em>
+                            <strong>Paso 1 (2 min):</strong>
+                            <ul>
+                                <li>Explicar qué es el Backlog Técnico y cómo crearlo.</li>
+                                <li>Indicar que el Ingeniero/a liderará esta actividad.</li>
+                                <li><strong>Proyectar Diapositiva 6</strong>.</li>
+                            </ul>
                         </td>
                         <td>
                             "Ahora, ¡vamos a crear nuestro 'Backlog Técnico Inicial'! Esto es simplemente una lista de las tareas más pequeñas que necesitamos hacer para construir esa función principal que acaban de definir."
@@ -317,10 +366,13 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 2 (7 min):</strong> Los equipos trabajan creando sus tareas iniciales en post-its/tarjetas y colocándolas en la columna "Por Hacer" de su Kanban.
-                            <br>Circular y apoyar, ayudando a descomponer tareas si es necesario.
-                            <br>Asegurarse de que las tareas sean accionables y relacionadas con la función principal definida.
-                            <br>El Tester puede empezar a pensar cómo probaría esas tareas.
+                            <strong>Paso 2 (7 min):</strong>
+                            <ul>
+                                <li>Los equipos trabajan creando sus tareas iniciales en post-its/tarjetas y colocándolas en la columna "Por Hacer" de su Kanban.</li>
+                                <li>Circular y apoyar, ayudando a descomponer tareas si es necesario.</li>
+                                <li>Asegurarse de que las tareas sean accionables y relacionadas con la función principal definida.</li>
+                                <li>El Tester puede empezar a pensar cómo probaría esas tareas.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Manos a la obra, equipos! Tienen 7 minutos para crear su backlog inicial."
@@ -337,7 +389,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 3 (1 min):</strong> Revisión visual rápida de los tableros Kanban.
+                            <strong>Paso 3 (1 min):</strong>
+                            <ul>
+                                <li>Revisión visual rápida de los tableros Kanban.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Excelente! Veo que todos los equipos tienen su backlog inicial listo en la columna 'Por Hacer'. ¡Ya tenemos nuestro plan de ataque inicial!"
@@ -345,14 +400,14 @@
                     </tr>
                 </table>
             </div>
-        </details>
+        </div>
 
         <!-- Actividad 5: ¡Roles Asignados, Motores Listos! -->
-        <details id="activity-5" class="activity">
-            <summary class="banner">
+        <div id="activity-5" class="activity">
+            <div class="banner" onclick="toggleContent('activity_5_content')">
                 <div class="title">🚀 Actividad 5: ¡Roles Asignados, Motores Listos! ⏰ Tiempo: 5 minutos</div>
-            </summary>
-            <div class="content">
+            </div>
+            <div id="activity_5_content" class="content">
                 <table>
                      <tr>
                         <th style="width: 50%;">Acción</th>
@@ -360,8 +415,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 1 (2 min):</strong> Guiar la asignación formal de roles dentro de cada equipo para esta sesión (o las próximas).
-                            <br><em>(<strong>Proyectar Diapositiva 7:</strong> ¡Roles y Acción! - Recordatorio visual de los 3 roles: Arquitecto T. 📐, Ingeniero 💻, Tester 🧪. Y un Kanban con una tarea moviéndose a "Haciendo" ⚙️).</em>
+                            <strong>Paso 1 (2 min):</strong>
+                            <ul>
+                                <li>Guiar la asignación formal de roles dentro de cada equipo para esta sesión (o las próximas).</li>
+                                <li><strong>Proyectar Diapositiva 7</strong>.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Último paso de nuestro plan de ataque por hoy! Ya conocemos los roles: Arquitecto/a T., Ingeniero/a y Tester."
@@ -374,8 +432,11 @@
                     </tr>
                      <tr>
                         <td>
-                            <strong>Paso 2 (2 min):</strong> Indicar a los equipos que muevan 1 o 2 tareas del "Por Hacer" al "Haciendo".
-                            <br>El Ingeniero/a (con apoyo del Arquitecto/a T.) elige qué tarea(s) empezar.
+                            <strong>Paso 2 (2 min):</strong>
+                            <ul>
+                                <li>Indicar a los equipos que muevan 1 o 2 tareas del "Por Hacer" al "Haciendo".</li>
+                                <li>El Ingeniero/a (con apoyo del Arquitecto/a T.) elige qué tarea(s) empezar.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Perfecto! Ahora que tienen roles y un backlog, ¡vamos a poner los motores en marcha!"
@@ -389,7 +450,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Paso 3 (1 min):</strong> Cierre de la sesión, resumen de lo logrado y anticipación de la próxima sesión.
+                            <strong>Paso 3 (1 min):</strong>
+                            <ul>
+                                <li>Cierre de la sesión, resumen de lo logrado y anticipación de la próxima sesión.</li>
+                            </ul>
                         </td>
                         <td>
                             "¡Fantástico trabajo, equipos! ¡Han completado su Plan de Ataque Robótico para la Sesión 1!"
@@ -403,7 +467,7 @@
                     </tr>
                 </table>
             </div>
-        </details>
+        </div>
 
     </div> <!-- Fin del container -->
 </body>
